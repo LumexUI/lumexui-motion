@@ -1,3 +1,5 @@
+using LumexUI.Motion.Types;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
@@ -43,17 +45,31 @@ public class Motion : ComponentBase
     [Inject] private IJSRuntime JS { get; set; } = default!;
 
     private ElementReference _ref;
+    private MotionProps? _props;
+
+    protected override void OnParametersSet()
+    {
+        if( Enter is not null ||
+            Exit is not null ||
+            Transition is not null )
+        {
+            _props = new MotionProps( Enter, Exit, Transition );
+        }
+    }
 
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync( bool firstRender )
     {
         if( string.IsNullOrEmpty( LayoutId ) )
         {
-            await AnimateAsync();
+            if( _props is not null )
+            {
+                await AnimateAsync( _props );
+            }
         }
         else
         {
-            await AnimateAsync( LayoutId );
+            await AnimateAsync( _props, LayoutId );
         }
     }
 
@@ -67,9 +83,14 @@ public class Motion : ComponentBase
         builder.CloseElement();
     }
 
-    private ValueTask AnimateAsync()
+    private ValueTask AnimateAsync( MotionProps props )
     {
-        return JS.InvokeVoidAsync( "motionInterop.animate", _ref, new { Enter }, Transition );
+        return JS.InvokeVoidAsync( "motionInterop.animateEnter", _ref, props );
+    }
+
+    private ValueTask AnimateAsync( MotionProps? props, string layoutId )
+    {
+        return JS.InvokeVoidAsync( "motionInterop.animateLayoutId", _ref, layoutId, props );
     }
 
     private ValueTask AnimateAsync( string layoutId )

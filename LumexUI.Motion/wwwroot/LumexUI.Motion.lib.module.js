@@ -2,21 +2,21 @@
 
 let layoutRegistry = {};
 
-async function animate(ref, props, transition) {
+async function animateEnter(ref, props) {
     try {
         if (!(ref instanceof HTMLElement)) {
             throw new Error("Invalid element provided");
         }
 
-        const { enter } = props;
+        const { enter, transition } = props || {};
 
         await motionAnimate(ref, enter, transition);
     } catch (error) {
-        console.error("`animate` failed:", error);
+        console.error("`animateEnter` failed:", error);
     }
 }
 
-async function animateLayoutId(ref, layoutId, props, transition) {
+async function animateLayoutId(ref, layoutId, props) {
     try {
         if (!(ref instanceof HTMLElement)) {
             throw new Error("Invalid element provided");
@@ -34,14 +34,14 @@ async function animateLayoutId(ref, layoutId, props, transition) {
                 x: [deltaX, 0]
             };
 
-            props = mergeDeep(props, { enter });
+            props = mergeDeep(props || {}, { enter });
 
             // Update the stored rect
             layoutRegistry[layoutId] = curr;
 
             if (ref != prev.ref) {
                 // Animate from prev => curr
-                await animate(ref, props, transition);
+                await animateEnter(ref, props);
             }
         } else {
             // First time we see this layoutId, store it
@@ -75,6 +75,6 @@ function mergeDeep(target, ...sources) {
 }
 
 window['motionInterop'] = {
-    animate,
+    animateEnter,
     animateLayoutId
 }
