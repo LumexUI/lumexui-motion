@@ -32,6 +32,11 @@ public class Motion : ComponentBase
     /// <summary>
     /// 
     /// </summary>
+    [Parameter] public string? LayoutId { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     [Parameter( CaptureUnmatchedValues = true )]
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
@@ -42,7 +47,14 @@ public class Motion : ComponentBase
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync( bool firstRender )
     {
-        await EnterAsync();
+        if( string.IsNullOrEmpty( LayoutId ) )
+        {
+            await AnimateAsync();
+        }
+        else
+        {
+            await AnimateAsync( LayoutId );
+        }
     }
 
     /// <inheritdoc />
@@ -55,8 +67,13 @@ public class Motion : ComponentBase
         builder.CloseElement();
     }
 
-    private ValueTask EnterAsync()
+    private ValueTask AnimateAsync()
     {
         return JS.InvokeVoidAsync( "motionInterop.animate", _ref, new { Enter }, Transition );
+    }
+
+    private ValueTask AnimateAsync( string layoutId )
+    {
+        return JS.InvokeVoidAsync( "motionInterop.animateLayoutId", _ref, layoutId, new { Enter }, Transition );
     }
 }

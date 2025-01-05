@@ -1,19 +1,80 @@
 ﻿import { animate as motionAnimate } from "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm"
 
-async function animate(el, props, transition) {
+let layoutRegistry = {};
+
+async function animate(ref, props, transition) {
     try {
-        if (!(el instanceof HTMLElement)) {
-            console.error("Invalid element provided");
+        if (!(ref instanceof HTMLElement)) {
+            throw new Error("Invalid element provided");
         }
 
         const { enter } = props;
 
-        await motionAnimate(el, enter, transition);
+        await motionAnimate(ref, enter, transition);
     } catch (error) {
-        console.error("Animation failed:", error);
+        console.error("`animate` failed:", error);
     }
 }
 
+async function animateLayoutId(ref, layoutId, props, transition) {
+    try {
+        if (!(ref instanceof HTMLElement)) {
+            throw new Error("Invalid element provided");
+        }
+
+        const rect = ref.getBoundingClientRect();
+        const curr = { ref, rect };
+
+        // If we already have a stored rect for this layoutId,
+        // animate from the prev -> curr.
+        if (layoutRegistry[layoutId]) {
+            const prev = layoutRegistry[layoutId];
+            const deltaX = prev.rect.x - curr.rect.x;
+            const enter = {
+                x: [deltaX, 0]
+            };
+
+            props = mergeDeep(props, { enter });
+
+            // Update the stored rect
+            layoutRegistry[layoutId] = curr;
+
+            if (ref != prev.ref) {
+                // Animate from prev => curr
+                await animate(ref, props, transition);
+            }
+        } else {
+            // First time we see this layoutId, store it
+            layoutRegistry[layoutId] = curr;
+        }
+    } catch (error) {
+        console.error("`animateLayoutId` failed:", error);
+    }
+}
+
+function isObject(item) {
+    return item && typeof item === "object" && !Array.isArray(item);
+}
+
+function mergeDeep(target, ...sources) {
+    if (!sources.length) return target;
+    const source = sources.shift();
+
+    if (isObject(target) && isObject(source)) {
+        for (const key in source) {
+            if (isObject(source[key])) {
+                if (!target[key]) Object.assign(target, { [key]: {} });
+                mergeDeep(target[key], source[key]);
+            } else {
+                Object.assign(target, { [key]: source[key] });
+            }
+        }
+    }
+
+    return mergeDeep(target, ...sources);
+}
+
 window['motionInterop'] = {
-    animate
+    animate,
+    animateLayoutId
 }
