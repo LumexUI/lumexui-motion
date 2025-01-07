@@ -1,18 +1,20 @@
 ﻿import { animate as motionAnimate } from "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm"
 
-let layoutRegistry = {};
+const layoutRegistry = {};
 
 async function animateEnter(ref, props) {
     try {
-        if (!(ref instanceof HTMLElement)) {
-            throw new Error("Invalid element provided");
-        }
-
-        const { enter, transition } = props || {};
-
-        await motionAnimate(ref, enter, transition);
+        await animateCore(ref, props, "enter");
     } catch (error) {
         console.error("`animateEnter` failed:", error);
+    }
+}
+
+async function animateExit(ref, props) {
+    try {
+        await animateCore(ref, props, "exit");
+    } catch (error) {
+        console.error("`animateExit` failed:", error);
     }
 }
 
@@ -52,6 +54,17 @@ async function animateLayoutId(ref, layoutId, props) {
     }
 }
 
+async function animateCore(ref, props, key) {
+    if (!(ref instanceof HTMLElement)) {
+        throw new Error("Invalid element provided");
+    }
+
+    const { transition } = props || {};
+    const animationProps = props?.[key];
+
+    await motionAnimate(ref, animationProps, transition);
+}
+
 function isObject(item) {
     return item && typeof item === "object" && !Array.isArray(item);
 }
@@ -76,5 +89,6 @@ function mergeDeep(target, ...sources) {
 
 window['motionInterop'] = {
     animateEnter,
+    animateExit,
     animateLayoutId
 }

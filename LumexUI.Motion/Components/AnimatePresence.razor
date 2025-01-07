@@ -1,0 +1,26 @@
+﻿@namespace LumexUI.Motion
+@inherits ComponentBase
+
+<CascadingValue TValue="PresenceContext" Value="@_context" IsFixed="@true">
+    @* @{
+        _context.StartCollecting();
+    } *@
+    @ChildContent
+
+    <_Defer>
+        @* @{
+            _context.StopCollecting();
+        } *@
+        @_render
+    </_Defer>
+</CascadingValue>
+
+@code {
+    private void Render(RenderTreeBuilder __builder)
+    {
+        foreach (var m in _context.Motions)
+        {
+            m.Render(__builder);
+        }
+    }
+}
