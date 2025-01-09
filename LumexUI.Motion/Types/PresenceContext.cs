@@ -2,30 +2,25 @@
 
 internal class PresenceContext
 {
-    private readonly List<Motion> _motions = [];
+    private bool _collecting = false;
 
-    private bool _collecting = true;
-
-    public IReadOnlyList<Motion> Motions => _motions.AsReadOnly();
-    public event Action? PresenceChanged;
+    public List<Motion> PresentChildren { get; } = [];
+    public List<Motion> RenderedChildren { get; set; } = [];
+    public List<Motion> DiffChildren { get; set; } = [];
+    public List<object> PresentKeys => PresentChildren.Select( c => c.Key ).ToList();
+    public bool PresenceHasChanged => !PresentChildren.SequenceEqual( DiffChildren );
 
     public void Register( Motion m )
     {
         if( _collecting )
         {
-            _motions.Add( m );
+            PresentChildren.Add( m );
         }
-    }
-
-    public void Unegister( Motion m )
-    {
-        _motions.Remove( m );
-        NotifyPresenceChanged();
     }
 
     public void StartCollecting()
     {
-        _motions.Clear();
+        PresentChildren.Clear();
         _collecting = true;
     }
 
@@ -33,6 +28,4 @@ internal class PresenceContext
     {
         _collecting = false;
     }
-
-    private void NotifyPresenceChanged() => PresenceChanged?.Invoke();
 }

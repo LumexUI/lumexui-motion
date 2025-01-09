@@ -7,7 +7,7 @@ namespace LumexUI.Motion;
 /// <summary>
 /// 
 /// </summary>
-public partial class AnimatePresence : ComponentBase, IDisposable
+public partial class AnimatePresence : ComponentBase
 {
     /// <summary>
     /// 
@@ -24,16 +24,5 @@ public partial class AnimatePresence : ComponentBase, IDisposable
     {
         _context = new PresenceContext();
         _render = Render;
-    }
-
-    /// <inheritdoc />
-    protected override void OnInitialized()
-    {
-        _context.PresenceChanged += StateHasChanged;
-    }
-
-    void IDisposable.Dispose()
-    {
-        _context.PresenceChanged -= StateHasChanged;
     }
 }
