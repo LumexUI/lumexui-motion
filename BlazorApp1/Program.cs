@@ -1,5 +1,7 @@
 using BlazorApp1;
 
+using LumexUI.Motion.Extensions;
+
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -12,6 +14,7 @@ internal class Program
         builder.RootComponents.Add<HeadOutlet>( "head::after" );
 
         builder.Services.AddScoped( sp => new HttpClient { BaseAddress = new Uri( builder.HostEnvironment.BaseAddress ) } );
+        builder.Services.AddLumexMotion();
 
         await builder.Build().RunAsync();
     }
