@@ -1,4 +1,5 @@
-﻿import { animate as motionAnimate } from "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm"
+﻿import { animate as motionAnimate } from 'https://cdn.jsdelivr.net/npm/motion@11.16.4/+esm'
+import { mergeDeep } from './utils.js'
 
 const layoutRegistry = {};
 
@@ -6,7 +7,7 @@ async function animateEnter(ref, props) {
     try {
         await animateCore(ref, props, "enter");
     } catch (error) {
-        console.error("`animateEnter` failed:", error);
+        console.error("animateEnter:", error);
     }
 }
 
@@ -14,11 +15,11 @@ async function animateExit(ref, props) {
     try {
         await animateCore(ref, props, "exit");
     } catch (error) {
-        console.error("`animateExit` failed:", error);
+        console.error("animateExit:", error);
     }
 }
 
-async function animateLayoutId(ref, layoutId, props) {
+async function animateLayoutId(ref, props, layoutId) {
     try {
         if (!(ref instanceof HTMLElement)) {
             throw new Error("Invalid element provided");
@@ -50,7 +51,7 @@ async function animateLayoutId(ref, layoutId, props) {
             layoutRegistry[layoutId] = curr;
         }
     } catch (error) {
-        console.error("`animateLayoutId` failed:", error);
+        console.error("animateLayoutId:", error);
     }
 }
 
@@ -65,29 +66,7 @@ async function animateCore(ref, props, key) {
     await motionAnimate(ref, animationProps, transition);
 }
 
-function isObject(item) {
-    return item && typeof item === "object" && !Array.isArray(item);
-}
-
-function mergeDeep(target, ...sources) {
-    if (!sources.length) return target;
-    const source = sources.shift();
-
-    if (isObject(target) && isObject(source)) {
-        for (const key in source) {
-            if (isObject(source[key])) {
-                if (!target[key]) Object.assign(target, { [key]: {} });
-                mergeDeep(target[key], source[key]);
-            } else {
-                Object.assign(target, { [key]: source[key] });
-            }
-        }
-    }
-
-    return mergeDeep(target, ...sources);
-}
-
-window['motionInterop'] = {
+export const motion = {
     animateEnter,
     animateExit,
     animateLayoutId
