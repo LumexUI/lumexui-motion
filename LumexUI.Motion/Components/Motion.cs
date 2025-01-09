@@ -23,7 +23,7 @@ public class Motion : ComponentBase
     /// <summary>
     /// 
     /// </summary>
-    [Parameter] public object Key { get; set; } = Guid.NewGuid();
+    [Parameter] public object? Key { get; set; }
 
     /// <summary>
     /// 
