@@ -1,3 +1,22 @@
 ﻿namespace LumexUI.Motion.Types;
 
-public record MotionProps( object? Enter, object? Exit, object? Transition );
+/// <summary>
+/// 
+/// </summary>
+public record MotionProps
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public object? Enter { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public object? Exit { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public object? Transition { get; init; }
+}

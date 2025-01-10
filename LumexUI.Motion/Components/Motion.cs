@@ -72,7 +72,12 @@ public class Motion : ComponentBase
             Exit is not null ||
             Transition is not null )
         {
-            _props = new MotionProps( Enter, Exit, Transition );
+            _props = new MotionProps
+            {
+                Enter = Enter,
+                Exit = Exit,
+                Transition = Transition
+            };
         }
     }
 
