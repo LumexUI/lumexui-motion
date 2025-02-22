@@ -9,7 +9,7 @@
 	<PropertyGroup>
 		<Title>LumexUI.Motion</Title>
 		<Description>A Blazor wrapper for the Motion library.</Description>
-		<Version>0.0.3</Version>
+		<Version>0.0.4</Version>
 		<Authors>desmondinho</Authors>
 		<PackageId>LumexUI.Motion</PackageId>
 		<!--<PackageIcon>logo.png</PackageIcon>-->
