@@ -5,13 +5,13 @@ using Microsoft.JSInterop;
 
 namespace LumexUI.Motion;
 
-internal sealed class MotionInterop : IAsyncDisposable
+internal sealed class MotionJsInterop : IAsyncDisposable
 {
     private const string JavaScriptPrefix = "motion";
 
     private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
 
-    public MotionInterop( IJSRuntime jsRuntime )
+    public MotionJsInterop( IJSRuntime jsRuntime )
     {
         _moduleTask = new( () => jsRuntime.InvokeAsync<IJSObjectReference>(
             "import", "./_content/LumexUI.Motion/motion.js" ).AsTask() );

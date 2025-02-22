@@ -56,7 +56,7 @@ public class Motion : ComponentBase
 	[CascadingParameter] private LayoutGroup? LayoutGroupContext { get; set; }
 	[CascadingParameter] private PresenceContext? PresenceContext { get; set; }
 
-	[Inject] private MotionInterop Interop { get; set; } = default!;
+	[Inject] private MotionJsInterop JsInterop { get; set; } = default!;
 
 	private ElementReference _ref;
 	private MotionProps? _props;
@@ -134,7 +134,7 @@ public class Motion : ComponentBase
 			return Task.CompletedTask;
 		}
 
-		return Interop.AnimateEnterAsync( _ref, _props );
+		return JsInterop.AnimateEnterAsync( _ref, _props );
 	}
 
 	internal Task AnimateExitAsync()
@@ -144,7 +144,7 @@ public class Motion : ComponentBase
 			return Task.CompletedTask;
 		}
 
-		return Interop.AnimateExitAsync( _ref, _props );
+		return JsInterop.AnimateExitAsync( _ref, _props );
 	}
 
 	internal Task AnimateLayoutIdAsync()
@@ -155,6 +155,6 @@ public class Motion : ComponentBase
 			? $"{LayoutGroupContext.Id}-{LayoutId}"
 			: LayoutId;
 
-		return Interop.AnimateLayoutIdAsync( _ref, _props, layoutId );
+		return JsInterop.AnimateLayoutIdAsync( _ref, _props, layoutId );
 	}
 }

@@ -1,18 +1,48 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
+	<PropertyGroup>
+		<Title>LumexUI.Motion</Title>
+		<Description>A Blazor wrapper for the Motion library.</Description>
+		<Version>0.0.1</Version>
+		<Authors>desmondinho</Authors>
+		<PackageId>LumexUI.Motion</PackageId>
+		<!--<PackageIcon>logo.png</PackageIcon>-->
+		<PackageTags>blazor;motion;components;library;</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/LumexUI/lumexui-motion</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/LumexUI/lumexui-motion</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <SupportedPlatform Include="browser" />
-  </ItemGroup>
+	<PropertyGroup>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.11" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" Visible="false" PackagePath="" />
+		<None Include="..\..\README.md" Pack="true" Visible="false" PackagePath="" />
+		<!--<None Include="..\assets\logo.png" Pack="true" Visible="false" PackagePath="" />-->
+	</ItemGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.11" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.1" />
+	</ItemGroup>
 
 </Project>

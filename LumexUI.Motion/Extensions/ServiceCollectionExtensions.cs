@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     public static void AddLumexMotion( this IServiceCollection services )
     {
-        services.AddScoped<MotionInterop>();
+        services.AddScoped<MotionJsInterop>();
     }
 }
 
