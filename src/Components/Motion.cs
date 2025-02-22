@@ -4,13 +4,14 @@ using LumexUI.Motion.Types;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.JSInterop;
 
 namespace LumexUI.Motion;
 
 /// <summary>
 /// 
 /// </summary>
-public class Motion : ComponentBase
+public class Motion : ComponentBase, IAsyncDisposable
 {
 	/// <summary>
 	/// 
@@ -56,10 +57,11 @@ public class Motion : ComponentBase
 	[CascadingParameter] private LayoutGroup? LayoutGroupContext { get; set; }
 	[CascadingParameter] private PresenceContext? PresenceContext { get; set; }
 
-	[Inject] private MotionJsInterop JsInterop { get; set; } = default!;
+	[Inject] private IJSRuntime JSRuntime { get; set; } = default!;
 
-	private ElementReference _ref;
+	private MotionJsInterop _jsInterop = default!;
 	private MotionProps? _props;
+	private ElementReference _ref;
 
 	/// <inheritdoc />
 	protected override void OnParametersSet()
@@ -102,6 +104,7 @@ public class Motion : ComponentBase
 	{
 		if( firstRender )
 		{
+			_jsInterop = new MotionJsInterop( JSRuntime );
 			await OnAnimatingAsync();
 		}
 	}
@@ -134,7 +137,7 @@ public class Motion : ComponentBase
 			return Task.CompletedTask;
 		}
 
-		return JsInterop.AnimateEnterAsync( _ref, _props );
+		return _jsInterop.AnimateEnterAsync( _ref, _props );
 	}
 
 	internal Task AnimateExitAsync()
@@ -144,7 +147,7 @@ public class Motion : ComponentBase
 			return Task.CompletedTask;
 		}
 
-		return JsInterop.AnimateExitAsync( _ref, _props );
+		return _jsInterop.AnimateExitAsync( _ref, _props );
 	}
 
 	internal Task AnimateLayoutIdAsync()
@@ -155,6 +158,15 @@ public class Motion : ComponentBase
 			? $"{LayoutGroupContext.Id}-{LayoutId}"
 			: LayoutId;
 
-		return JsInterop.AnimateLayoutIdAsync( _ref, _props, layoutId );
+		return _jsInterop.AnimateLayoutIdAsync( _ref, _props, layoutId );
+	}
+
+	/// <inheritdoc />
+	public async ValueTask DisposeAsync()
+	{
+		if( _jsInterop is not null )
+		{
+			await _jsInterop.DisposeAsync();
+		}
 	}
 }
