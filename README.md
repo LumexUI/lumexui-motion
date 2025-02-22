@@ -87,10 +87,6 @@ https://github.com/user-attachments/assets/7b86932e-7e5c-422e-959d-a091f11ee4ef
 @* A component that detects when its direct children are removed from the render tree. *@
 <AnimatePresence>
     @if( _isVisible )
-
-https://github.com/user-attachments/assets/f15b1484-ce17-469f-800d-c5c6dbe32e2a
-
-
     {
         <Motion Exit="@_motionProps.Exit">
             <h1>Hello, world!</h1>
