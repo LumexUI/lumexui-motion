@@ -5,7 +5,7 @@ using Microsoft.JSInterop;
 
 namespace LumexUI.Motion;
 
-internal sealed class MotionJsInterop : IAsyncDisposable
+public class MotionJsInterop : IAsyncDisposable
 {
     private const string JavaScriptPrefix = "motion";
 
