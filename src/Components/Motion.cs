@@ -4,14 +4,13 @@ using LumexUI.Motion.Types;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.JSInterop;
 
 namespace LumexUI.Motion;
 
 /// <summary>
 /// 
 /// </summary>
-public class Motion : ComponentBase, IAsyncDisposable
+public class Motion : ComponentBase
 {
 	/// <summary>
 	/// 
@@ -57,11 +56,10 @@ public class Motion : ComponentBase, IAsyncDisposable
 	[CascadingParameter] private LayoutGroup? LayoutGroupContext { get; set; }
 	[CascadingParameter] private PresenceContext? PresenceContext { get; set; }
 
-	[Inject] private IJSRuntime JSRuntime { get; set; } = default!;
+	[Inject] private MotionJsInterop JsInterop { get; set; } = default!;
 
-	private MotionJsInterop _jsInterop = default!;
-	private MotionProps? _props;
 	private ElementReference _ref;
+	private MotionProps? _props;
 
 	/// <inheritdoc />
 	protected override void OnParametersSet()
@@ -104,7 +102,6 @@ public class Motion : ComponentBase, IAsyncDisposable
 	{
 		if( firstRender )
 		{
-			_jsInterop = new MotionJsInterop( JSRuntime );
 			await OnAnimatingAsync();
 		}
 	}
@@ -137,7 +134,7 @@ public class Motion : ComponentBase, IAsyncDisposable
 			return Task.CompletedTask;
 		}
 
-		return _jsInterop.AnimateEnterAsync( _ref, _props );
+		return JsInterop.AnimateEnterAsync( _ref, _props );
 	}
 
 	internal Task AnimateExitAsync()
@@ -147,7 +144,7 @@ public class Motion : ComponentBase, IAsyncDisposable
 			return Task.CompletedTask;
 		}
 
-		return _jsInterop.AnimateExitAsync( _ref, _props );
+		return JsInterop.AnimateExitAsync( _ref, _props );
 	}
 
 	internal Task AnimateLayoutIdAsync()
@@ -158,15 +155,6 @@ public class Motion : ComponentBase, IAsyncDisposable
 			? $"{LayoutGroupContext.Id}-{LayoutId}"
 			: LayoutId;
 
-		return _jsInterop.AnimateLayoutIdAsync( _ref, _props, layoutId );
-	}
-
-	/// <inheritdoc />
-	public async ValueTask DisposeAsync()
-	{
-		if( _jsInterop is not null )
-		{
-			await _jsInterop.DisposeAsync();
-		}
+		return JsInterop.AnimateLayoutIdAsync( _ref, _props, layoutId );
 	}
 }
