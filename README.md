@@ -6,6 +6,27 @@ This project was primarily created to support [the main LumexUI project](https:/
 
 If you choose to explore or contribute, please be aware that stability is not guaranteed, and updates may be infrequent or focused on specific needs.
 
+## Installation
+
+1. Register the service in the DI:
+   
+```csharp
+// Program.cs
+
+using LumexUI.Motion.Extensions;
+
+builder.Services.AddLumexMotion();
+```
+
+2. Globally add the necessary usings:
+
+```razor
+@* _Imports.razor *@
+
+@using LumexUI.Motion
+@using LumexUI.Motion.Types
+```
+
 ## API
 
 Since this project is a Blazor wrapper, I mimic the original API, but it’s not fully implemented yet. 
